@@ -1,6 +1,8 @@
 package com.hoaxify.ws.user;
 
 
+import com.hoaxify.ws.shared.GenericResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -10,10 +12,10 @@ public class UserController {
 
 
 
-    private UserRepository userRepository;
+    private UserService userService;
 
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/api/v1/users")
@@ -22,7 +24,9 @@ public class UserController {
     }
 
     @PostMapping("/api/v1/users")
-    public void createUser(@RequestBody User user){
-            userRepository.save(user);
+    @ResponseStatus(HttpStatus.CREATED)
+    public GenericResponse createUser(@RequestBody User user){
+        userService.save(user);
+        return  new GenericResponse("user created");
     }
 }
