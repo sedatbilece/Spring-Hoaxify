@@ -1,9 +1,14 @@
 package com.hoaxify.ws.user;
 
 
+import com.hoaxify.ws.error.ApiError;
 import com.hoaxify.ws.shared.GenericResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 @CrossOrigin
@@ -25,8 +30,15 @@ public class UserController {
 
     @PostMapping("/api/v1/users")
     @ResponseStatus(HttpStatus.CREATED)
-    public GenericResponse createUser(@RequestBody User user){
+    public ResponseEntity<?> createUser(@RequestBody User user){
+        if (user.getUsername()==null || user.getUsername().isEmpty()){
+            ApiError error = new ApiError(400,"validation error","/api/v1/users");
+            Map<String,String> validationerror = new HashMap<>();
+            validationerror.put("username","username cannot be empty");
+            error.setValidationErrors(validationerror);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        }
         userService.save(user);
-        return  new GenericResponse("user created");
+        return  ResponseEntity.ok(new GenericResponse("user created"));
     }
 }
