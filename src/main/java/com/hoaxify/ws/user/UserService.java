@@ -32,6 +32,10 @@ public class UserService {
             validationerror.put("username","User Name cannot be empty");
         }
         else{
+              User usname = userRepository.findByUsername(user.getUsername());
+              if(usname!=null){
+                  validationerror.put("username","User Name  must be unique");
+              }
             if(user.getUsername().length()<4 || user.getUsername().length()>50){
                 validationerror.put("username","User Name  must be 4-50 Character"); }
         }
