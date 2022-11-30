@@ -1,5 +1,8 @@
 package com.hoaxify.ws.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.hoaxify.ws.shared.Views;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -13,15 +16,18 @@ public class User {
     @Id
     @GeneratedValue
     private long id;
-
-
     @NotNull
+    @JsonView(Views.Base.class)
     private String username;
 
     @NotNull
+    @JsonView(Views.Base.class)
     private String displayName;
 
     private String password;
+
+    @JsonView(Views.Base.class)
+    private String image;
 
 
     @Override
