@@ -2,12 +2,14 @@ package com.hoaxify.ws.auth;
 
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.hoaxify.ws.configuration.HoaxifyUserDetails;
 import com.hoaxify.ws.error.ApiError;
 import com.hoaxify.ws.shared.Views;
 import com.hoaxify.ws.user.User;
 import com.hoaxify.ws.user.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,13 +33,11 @@ public class AuthController {
 
     @PostMapping("/api/v1/auth")
     @JsonView(Views.Base.class)
-    ResponseEntity<?> handleAuthentication(@RequestHeader(name="Authorization" ) String authorization ){
+    ResponseEntity<?> handleAuthentication(){
 
+      HoaxifyUserDetails userDetails = (HoaxifyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        String base64encode= authorization.split("Basic ")[1];
-        String decoded=new String(Base64.getDecoder().decode(base64encode));
-        String[] parts =decoded.split(":");
-        String username=parts[0]; String password =parts[1];
+        String username= userDetails.getUsername();
 
         User inDB= userRepository.findByUsername(username);
         if(inDB==null){
