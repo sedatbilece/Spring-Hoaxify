@@ -23,20 +23,16 @@ public class AuthController {
 
 
     private UserRepository userRepository;
-     PasswordEncoder passwordEncoder;
+
     public AuthController(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.passwordEncoder = new BCryptPasswordEncoder();
+
     }
 
     @PostMapping("/api/v1/auth")
     @JsonView(Views.Base.class)
-    ResponseEntity<?> handleAuthentication(@RequestHeader(name="Authorization" ,required = false) String authorization ){
+    ResponseEntity<?> handleAuthentication(@RequestHeader(name="Authorization" ) String authorization ){
 
-        if(authorization==null){
-            ApiError error = new ApiError(401,"Unauthorized request","/api/v1/auth");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
-        }
 
         String base64encode= authorization.split("Basic ")[1];
         String decoded=new String(Base64.getDecoder().decode(base64encode));
@@ -48,11 +44,7 @@ public class AuthController {
             ApiError error = new ApiError(401,"Unauthorized request","/api/v1/auth");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
         }
-        String hashPassword = inDB.getPassword();
-        if(!passwordEncoder.matches(password,hashPassword)){
-            ApiError error = new ApiError(401,"Unauthorized request","/api/v1/auth");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
-        }
+
           // username,displayName ,image
         Map<String ,String> responseBody = new HashMap<>();
         responseBody.put("username",inDB.getUsername());
