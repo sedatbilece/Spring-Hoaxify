@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -25,8 +26,8 @@ public class UserController {
     }
 
     @GetMapping("/api/v1/users")
-    public String sayHi(){
-        return "hello from user controller";
+    List<User> getAllUsers(){
+        return userService.getAllUsers();
     }
 
     @PostMapping("/api/v1/users")
