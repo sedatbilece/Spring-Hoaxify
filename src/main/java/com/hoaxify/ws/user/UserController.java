@@ -1,7 +1,7 @@
 package com.hoaxify.ws.user;
 
 
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +22,7 @@ public class UserController {
     }
 
     @GetMapping("/api/v1/users")
-    Page<User> getAllUsers(@RequestParam int currentPage,@RequestParam(required = false,defaultValue = "10") int pageSize){
+    PageImpl<UserResponse> getAllUsers(@RequestParam int currentPage,@RequestParam(required = false,defaultValue = "10") int pageSize){
         return userService.getAllUsers(currentPage,pageSize);
     }
 

@@ -1,21 +1,22 @@
 package com.hoaxify.ws.user;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import com.hoaxify.ws.shared.Views;
 import lombok.Data;
-
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
 
 @Data
 public class UserResponse {
 
     private long id;
+
     private String username;
 
     private String displayName;
 
     private String image;
 
+    public UserResponse(long id, String username, String displayName, String image) {
+        this.id = id;
+        this.username = username;
+        this.displayName = displayName;
+        this.image = image;
+    }
 }

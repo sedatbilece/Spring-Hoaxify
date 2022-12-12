@@ -4,17 +4,18 @@ package com.hoaxify.ws.user;
 import com.hoaxify.ws.error.ApiError;
 import com.hoaxify.ws.shared.GenericResponse;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -71,9 +72,17 @@ public class UserService {
         return  ResponseEntity.ok(new GenericResponse("user created"));
     }
 
-    public Page<User> getAllUsers(int currentPage,int pageSize) {
+    public PageImpl<UserResponse> getAllUsers(int currentPage, int pageSize) {
       Pageable page= PageRequest.of(currentPage,pageSize);
-       return userRepository.findAll(page);
+       Page<User> userPage= userRepository.findAll(page);//get page type all users
+       List<User> userList= userPage.getContent();//get user list from pages
 
+       List<UserResponse> responseList=  userList.stream().map(user -> new UserResponse(//mapping dto
+               user.getId(),
+               user.getUsername(),
+               user.getDisplayName(),
+               user.getImage() )).collect(Collectors.toList());
+
+        return new PageImpl<UserResponse>(responseList, page, userPage.getTotalElements());//convert Page list
     }
 }
