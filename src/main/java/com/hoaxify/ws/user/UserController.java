@@ -22,7 +22,7 @@ public class UserController {
     }
 
     @GetMapping("/api/v1/users")
-    PageImpl<UserResponse> getAllUsers(@RequestParam int currentPage,@RequestParam(required = false,defaultValue = "10") int pageSize){
+    PageImpl<UserResponse> getAllUsers(@RequestParam(required = false,defaultValue = "0") int currentPage,@RequestParam(required = false,defaultValue = "10") int pageSize){
         return userService.getAllUsers(currentPage,pageSize);
     }
 

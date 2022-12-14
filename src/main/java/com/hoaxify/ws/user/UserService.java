@@ -73,6 +73,7 @@ public class UserService {
     }
 
     public PageImpl<UserResponse> getAllUsers(int currentPage, int pageSize) {
+        
       Pageable page= PageRequest.of(currentPage,pageSize);
        Page<User> userPage= userRepository.findAll(page);//get page type all users
        List<User> userList= userPage.getContent();//get user list from pages
