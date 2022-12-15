@@ -86,4 +86,22 @@ public class UserService {
 
         return new PageImpl<UserResponse>(responseList, page, userPage.getTotalElements());//convert Page list
     }
+
+    public ResponseEntity<?> getUser(String username) {
+
+        User user= userRepository.findByUsername(username);
+
+        if(user==null){
+            ApiError error = new ApiError(404,"User not Found","/api/v1/users/"+username);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        }
+
+        UserResponse getuser= new UserResponse(//mapping dto
+                user.getId(),
+                user.getUsername(),
+                user.getDisplayName(),
+                user.getImage() );
+
+        return   ResponseEntity.ok(getuser);
+    }
 }

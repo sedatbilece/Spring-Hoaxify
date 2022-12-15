@@ -11,6 +11,7 @@ import javax.validation.Valid;
 
 @CrossOrigin
 @RestController
+@RequestMapping("/api/v1")
 public class UserController {
 
 
@@ -21,14 +22,20 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/api/v1/users")
-    PageImpl<UserResponse> getAllUsers(@RequestParam(required = false,defaultValue = "0") int currentPage,@RequestParam(required = false,defaultValue = "10") int pageSize){
+    @GetMapping("/users")
+    PageImpl<UserResponse> getAllUsers(@RequestParam(required = false,defaultValue = "0") int currentPage,
+                                       @RequestParam(required = false,defaultValue = "10") int pageSize){
         return userService.getAllUsers(currentPage,pageSize);
     }
 
-    @PostMapping("/api/v1/users")
+    @PostMapping("/users")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> createUser(@Valid @RequestBody User user){
        return userService.save(user);
+    }
+
+    @GetMapping("/users/{username}")
+    ResponseEntity<?> getUser(@PathVariable String username){
+       return  userService.getUser(username);
     }
 }
