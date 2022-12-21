@@ -3,7 +3,7 @@ package com.hoaxify.ws.user;
 import lombok.Data;
 
 @Data
-public class UserResponse {
+public class UserResponseDto {
 
     private long id;
 
@@ -13,7 +13,7 @@ public class UserResponse {
 
     private String image;
 
-    public UserResponse(long id, String username, String displayName, String image) {
+    public UserResponseDto(long id, String username, String displayName, String image) {
         this.id = id;
         this.username = username;
         this.displayName = displayName;

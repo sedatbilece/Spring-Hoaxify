@@ -23,8 +23,8 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    PageImpl<UserResponse> getAllUsers(@RequestParam(required = false,defaultValue = "0") int currentPage,
-                                       @RequestParam(required = false,defaultValue = "10") int pageSize){
+    PageImpl<UserResponseDto> getAllUsers(@RequestParam(required = false,defaultValue = "0") int currentPage,
+                                          @RequestParam(required = false,defaultValue = "10") int pageSize){
         return userService.getAllUsers(currentPage,pageSize);
     }
 
@@ -37,5 +37,10 @@ public class UserController {
     @GetMapping("/users/{username}")
     ResponseEntity<?> getUser(@PathVariable String username){
        return  userService.getUser(username);
+    }
+
+    @PutMapping("/users/{username}")
+    ResponseEntity<?> updateUser(@RequestBody UserUpdateDto userUpdateDto ,@PathVariable String username){
+        return userService.updateUser(username,userUpdateDto);
     }
 }

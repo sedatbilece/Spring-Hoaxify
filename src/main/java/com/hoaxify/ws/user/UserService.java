@@ -72,19 +72,19 @@ public class UserService {
         return  ResponseEntity.ok(new GenericResponse("user created"));
     }
 
-    public PageImpl<UserResponse> getAllUsers(int currentPage, int pageSize) {
+    public PageImpl<UserResponseDto> getAllUsers(int currentPage, int pageSize) {
         
       Pageable page= PageRequest.of(currentPage,pageSize);
        Page<User> userPage= userRepository.findAll(page);//get page type all users
        List<User> userList= userPage.getContent();//get user list from pages
 
-       List<UserResponse> responseList=  userList.stream().map(user -> new UserResponse(//mapping dto
+       List<UserResponseDto> responseList=  userList.stream().map(user -> new UserResponseDto(//mapping dto
                user.getId(),
                user.getUsername(),
                user.getDisplayName(),
                user.getImage() )).collect(Collectors.toList());
 
-        return new PageImpl<UserResponse>(responseList, page, userPage.getTotalElements());//convert Page list
+        return new PageImpl<UserResponseDto>(responseList, page, userPage.getTotalElements());//convert Page list
     }
 
     public ResponseEntity<?> getUser(String username) {
@@ -96,12 +96,27 @@ public class UserService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         }
 
-        UserResponse getuser= new UserResponse(//mapping dto
+        UserResponseDto getuser= new UserResponseDto(//mapping dto
                 user.getId(),
                 user.getUsername(),
                 user.getDisplayName(),
                 user.getImage() );
 
         return   ResponseEntity.ok(getuser);
+    }
+
+    public ResponseEntity<?> updateUser(String username, UserUpdateDto userUpdateDto) {
+
+        User inDB = userRepository.findByUsername(username);
+        inDB.setDisplayName(userUpdateDto.getDisplayName());
+        userRepository.save(inDB);
+
+        UserResponseDto getUser= new UserResponseDto(//mapping dto
+                inDB.getId(),
+                inDB.getUsername(),
+                inDB.getDisplayName(),
+                inDB.getImage() );
+
+        return   ResponseEntity.ok(getUser);
     }
 }
