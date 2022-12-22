@@ -111,6 +111,10 @@ public class UserService {
 
         User inDB = userRepository.findByUsername(username);
         inDB.setDisplayName(userUpdateDto.getDisplayName());
+
+        if (userUpdateDto.getImage() !=null){
+            inDB.setImage(userUpdateDto.getImage());
+        }
         userRepository.save(inDB);
 
         UserResponseDto getUser= new UserResponseDto(//mapping dto

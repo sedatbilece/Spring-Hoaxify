@@ -31,6 +31,7 @@ public class User  implements UserDetails {
     private String password;
 
     @JsonView(Views.Base.class)
+    @Lob
     private String image;
 
 
