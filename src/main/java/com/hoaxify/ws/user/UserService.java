@@ -3,6 +3,7 @@ package com.hoaxify.ws.user;
 
 import com.hoaxify.ws.error.ApiError;
 import com.hoaxify.ws.shared.GenericResponse;
+import org.apache.tika.Tika;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -109,6 +111,7 @@ public class UserService {
 
     public ResponseEntity<?> updateUser(String username, UserUpdateDto userUpdateDto) {
 
+        // DisplayName
         if(userUpdateDto.getDisplayName().length()<4 ||userUpdateDto.getDisplayName().length()>255 ){
             ApiError error = new ApiError(400,"Not valid request","/api/v1/users/"+username);
             Map<String,String> validationerror = new HashMap<>();
@@ -119,9 +122,31 @@ public class UserService {
             User inDB = userRepository.findByUsername(username);
             inDB.setDisplayName(userUpdateDto.getDisplayName());
 
+            // Image
         if (userUpdateDto.getImage() !=null){
-            inDB.setImage(userUpdateDto.getImage());
+
+            Tika tika= new Tika();
+            String fileType = tika.detect(userUpdateDto.getImage());
+            if(Objects.equals(fileType, "image/jpeg") || Objects.equals(fileType, "image/jpg")
+                    || Objects.equals(fileType, "image/png")  ){
+
+
+                inDB.setImage(userUpdateDto.getImage());
+            }
+            else{
+                ApiError error = new ApiError(400,"Not valid request","/api/v1/users/"+username);
+                Map<String,String> validationerror = new HashMap<>();
+                validationerror.put("image","Image type can not be "+fileType);
+                error.setValidationErrors(validationerror);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+            }
+
         }
+
+
+
+
+
         userRepository.save(inDB);
 
         UserResponseDto getUser= new UserResponseDto(//mapping dto
