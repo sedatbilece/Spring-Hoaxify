@@ -109,8 +109,15 @@ public class UserService {
 
     public ResponseEntity<?> updateUser(String username, UserUpdateDto userUpdateDto) {
 
-        User inDB = userRepository.findByUsername(username);
-        inDB.setDisplayName(userUpdateDto.getDisplayName());
+        if(userUpdateDto.getDisplayName().length()<4 ||userUpdateDto.getDisplayName().length()>255 ){
+            ApiError error = new ApiError(400,"Not valid request","/api/v1/users/"+username);
+            Map<String,String> validationerror = new HashMap<>();
+            validationerror.put("displayName","Display Name  must be 4-50 Character");
+            error.setValidationErrors(validationerror);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        }
+            User inDB = userRepository.findByUsername(username);
+            inDB.setDisplayName(userUpdateDto.getDisplayName());
 
         if (userUpdateDto.getImage() !=null){
             inDB.setImage(userUpdateDto.getImage());
