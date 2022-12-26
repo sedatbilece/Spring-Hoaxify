@@ -32,6 +32,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         //for error handling
         http.httpBasic().authenticationEntryPoint(new AuthEntryPoint());
 
+
+        http.headers().frameOptions().disable();// for h2 db access
+
              http   //use auth for this path and permit other request
                 .authorizeRequests().antMatchers(HttpMethod.POST,"/api/v1/auth").authenticated()
                      .antMatchers(HttpMethod.GET,"/api/v1/secured").authenticated()
