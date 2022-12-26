@@ -13,6 +13,7 @@ public class Hoax {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(length = 1000)
     private String content;
 
     @Temporal(TemporalType.TIMESTAMP)
