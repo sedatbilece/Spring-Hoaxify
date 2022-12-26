@@ -2,6 +2,8 @@ package com.hoaxify.ws.hoax;
 
 import com.hoaxify.ws.error.ApiError;
 import com.hoaxify.ws.shared.GenericResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -38,5 +40,7 @@ public class HoaxService {
     }
 
 
-
+    public Page<Hoax> getHoaxes(Pageable page) {
+        return hoaxRepository.findAll(page);
+    }
 }
