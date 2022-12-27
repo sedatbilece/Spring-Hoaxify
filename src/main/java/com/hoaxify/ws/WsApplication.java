@@ -22,18 +22,21 @@ public class WsApplication {
 		return new CommandLineRunner(){
 			@Override
 			public void run(String... args) throws Exception {
-				for(int i=1;i<=100;i++){
+				for(int i=1;i<=25;i++){
 					User user =new User();
 					user.setUsername("user"+i);
 					user.setPassword("Password"+i);
 					user.setDisplayName("dispName"+i);
 					userService.save(user);
+
+					for(int j=1;j<=2;j++){
+						Hoax hoax= new Hoax();
+						hoax.setContent("hoax content - "+j);
+						hoax.setUsername(user.getUsername());
+						hoaxService.save(hoax);
+					}
 				}
-				for(int i=1;i<50;i++){
-					Hoax hoax= new Hoax();
-					hoax.setContent("hoax content - "+i);
-					hoaxService.save(hoax);
-				}
+
 			}
 		};
 	}
