@@ -43,4 +43,8 @@ public class HoaxService {
     public Page<Hoax> getHoaxes(Pageable page) {
         return hoaxRepository.findAll(page);
     }
+
+    public Page<Hoax> getHoaxesRelative(Pageable page, long id) {
+           return hoaxRepository.findIdLessThan(id,page);
+    }
 }

@@ -27,4 +27,9 @@ public class HoaxController {
     Page<Hoax> getHoaxes(@PageableDefault(sort = "id",direction = Sort.Direction.DESC) Pageable page){
         return hoaxService.getHoaxes(page);
     }
+
+    @GetMapping("/hoaxes/id:[0-9]+")
+    Page<Hoax> getHoaxesRelative(@PageableDefault(sort = "id",direction = Sort.Direction.DESC) Pageable page,@PathVariable long id){
+        return hoaxService.getHoaxesRelative(page ,id);
+    }
 }
